@@ -1,5 +1,5 @@
 import React from "react";
-import { WaitingError } from "@/features/waiting-room/ui/WaitingError";
+import { WaitingError } from "@/pages/waiting-room/ui/WaitingError";
 import { useUserContext } from "@/shared/hooks/useUserContext";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { responseBetRoomInfo } from "@betting-duck/shared";

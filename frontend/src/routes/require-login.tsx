@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ErrorComponent } from "@/shared/components/Error";
-import { CreateVoteError } from "@/features/create-vote/ui/error/CreateVoteError";
+import { CreateVoteError } from "@/pages/create-vote/ui/error/CreateVoteError";
 import { z } from "zod";
-import { ErrorMyPage } from "@/features/my-page/error";
+import { ErrorMyPage } from "@/pages/my-page/error";
 import { ROUTE_PATH_ENUM, ROUTES } from "@/shared/config/route";
-import { WaitingError } from "@/features/waiting-room/ui/WaitingError";
+import { WaitingError } from "@/pages/waiting-room/ui/WaitingError";
 import { GuestErrorComponent } from "@/shared/components/Error/GuestError";
 
 const searchSchema = z.object({

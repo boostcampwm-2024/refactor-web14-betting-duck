@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { WaitingRoom } from "@/features/waiting-room";
-import { WaitingError } from "@/features/waiting-room/ui/WaitingError";
-import { AccessError } from "@/features/waiting-room/error/AccessError";
-import { Forbidden } from "@/features/waiting-room/error/Forbidden";
+import { WaitingRoom } from "@/pages/waiting-room";
+import { WaitingError } from "@/pages/waiting-room/ui/WaitingError";
+import { AccessError } from "@/pages/waiting-room/error/AccessError";
+import { Forbidden } from "@/pages/waiting-room/error/Forbidden";
 import { ErrorComponent } from "@/shared/components/Error";
-import { getBettingRoomInfo } from "@/features/betting-page/api/getBettingRoomInfo";
-import { GuestLoginForm } from "@/features/login-page/ui/components";
+import { getBettingRoomInfo } from "@/pages/betting-page/api/getBettingRoomInfo";
+import { GuestLoginForm } from "@/pages/login-page/ui/components";
 import { bettingRoomQueryKey } from "@/shared/lib/bettingRoomInfo";
 import {
   getSessionItem,

@@ -1,5 +1,5 @@
-import { STORAGE_KEY } from "@/features/betting-page/model/var";
-import { PredictDetail } from "@/features/predict-detail";
+import { STORAGE_KEY } from "@/pages/betting-page/model/var";
+import { PredictDetail } from "@/pages/predict-detail";
 import { GlobalErrorComponent } from "@/shared/components/Error/GlobalError";
 import { getSessionItem } from "@/shared/hooks/useSessionStorage";
 import { BettingRoomInfoSchema } from "@/shared/types";

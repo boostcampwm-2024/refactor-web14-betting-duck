@@ -1,6 +1,6 @@
-import { BettingPageAdmin } from "@/features/betting-page-admin";
+import { BettingPageAdmin } from "@/pages/betting-page-admin";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { getBettingRoomInfo } from "@/features/betting-page/api/getBettingRoomInfo";
+import { getBettingRoomInfo } from "@/pages/betting-page/api/getBettingRoomInfo";
 import { GlobalErrorComponent } from "@/shared/components/Error/GlobalError";
 
 export const Route = createFileRoute("/betting_/$roomId/vote/admin")({

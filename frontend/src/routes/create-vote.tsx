@@ -1,9 +1,9 @@
-import { CreateVotePage } from "@/features/create-vote";
+import { CreateVotePage } from "@/pages/create-vote";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { ErrorComponent } from "@/shared/components/Error";
-import { CreateVoteError } from "@/features/create-vote/ui/error/CreateVoteError";
+import { CreateVoteError } from "@/pages/create-vote/ui/error/CreateVoteError";
 import { getSessionItem } from "@/shared/hooks/useSessionStorage";
-import { getBettingRoomInfo } from "@/features/betting-page/api/getBettingRoomInfo";
+import { getBettingRoomInfo } from "@/pages/betting-page/api/getBettingRoomInfo";
 import { ROUTES } from "@/shared/config/route";
 import { authQueries } from "@/shared/lib/auth/authQuery";
 import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";

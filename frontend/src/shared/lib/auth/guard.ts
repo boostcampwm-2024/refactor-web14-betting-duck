@@ -87,6 +87,10 @@ export async function checkAuthStatus(): Promise<AuthStatusType> {
         credentials: "include",
       }),
       fetch("/api/users/userInfo", {
+        headers: {
+          "Cache-Control": "stale-while-revalidate",
+          Pragma: "no-cache",
+        },
         credentials: "include",
       }),
     ]);

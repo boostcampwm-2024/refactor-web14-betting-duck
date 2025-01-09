@@ -1,4 +1,4 @@
-import { LoginPage } from "@/features/login-page";
+import { LoginPage } from "@/pages/login-page";
 import { GlobalErrorComponent } from "@/shared/components/Error/GlobalError";
 import { authQueries } from "@/shared/lib/auth/authQuery";
 import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";

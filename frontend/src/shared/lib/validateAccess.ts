@@ -1,4 +1,4 @@
-import { AccessError } from "@/features/waiting-room/error/AccessError";
+import { AccessError } from "@/pages/waiting-room/error/AccessError";
 
 async function validateAccess(roomId: string, signal: AbortSignal) {
   try {

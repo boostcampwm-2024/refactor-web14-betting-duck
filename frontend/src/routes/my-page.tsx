@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { ErrorComponent } from "@/shared/components/Error";
-import { MyPage } from "@/features/my-page";
-import { ErrorMyPage } from "@/features/my-page/error";
+import { MyPage } from "@/pages/my-page";
+import { ErrorMyPage } from "@/pages/my-page/error";
 import { ROUTES } from "@/shared/config/route";
 
 export const Route = createFileRoute("/my-page")({
