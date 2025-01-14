@@ -8,12 +8,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { authQueries } from "@/shared/lib/auth/authQuery";
 import { z } from "zod";
 import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";
+import { useAuthState } from "@/shared/hooks/useAuthState";
 
 function GuestLoginForm({ to, roomId }: { to?: string; roomId?: string }) {
   const [nickname, setNickname] = useState("");
   const { error } = useAuthStore();
   const [isSignedUp, setIsSignedUp] = useState(false);
   const queryClient = useQueryClient();
+  const { setAuthState } = useAuthState();
 
   const { setUserInfo } = useUserContext();
   const navigate = useNavigate();
@@ -80,6 +82,11 @@ function GuestLoginForm({ to, roomId }: { to?: string; roomId?: string }) {
         }),
       );
       await queryClient.invalidateQueries({ queryKey: authQueries.queryKey });
+      setAuthState((prev) => ({
+        ...prev,
+        isAuthenticated: true,
+        nickname: data.nickname,
+      }));
 
       if (to && roomId) {
         window.location.href = `/betting/${roomId}/waiting`;
