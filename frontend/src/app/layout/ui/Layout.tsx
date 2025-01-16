@@ -4,8 +4,8 @@ import { RootHeader } from "./RootHeader";
 import { RootSideBar } from "./RootSidebar";
 import { Suspense } from "react";
 import { LoadingAnimation } from "@/shared/components/Loading";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { authQueries } from "@/shared/lib/auth/authQuery";
+import { useRecoilValue } from "recoil";
+import { Auth } from "@/app/provider/RouterProvider/lib/auth";
 
 const layoutStyles = {
   default: "max-w-[520px]",
@@ -14,10 +14,7 @@ const layoutStyles = {
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { layoutType } = useLayout();
-  const { data: authData } = useSuspenseQuery({
-    queryKey: authQueries.queryKey,
-    queryFn: authQueries.queryFn,
-  });
+  const authData = useRecoilValue(Auth);
 
   return (
     <div
@@ -29,7 +26,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       )}
     >
       <Suspense fallback={<LoadingAnimation />}>
-        <RootHeader nickname={authData.userInfo.nickname} />
+        <RootHeader nickname={authData.nickname ?? ""} />
         <RootSideBar isAuthenticated={authData.isAuthenticated} />
       </Suspense>
       {children}
