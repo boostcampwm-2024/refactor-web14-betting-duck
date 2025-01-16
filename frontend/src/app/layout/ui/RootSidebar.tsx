@@ -11,6 +11,7 @@ import { useLocation } from "@tanstack/react-router";
 import { LogoutButton } from "@/pages/login-page/ui/components/Logout";
 
 type NavItemType = {
+  id: string;
   icon: () => JSX.Element;
   label: string;
   href: string;
@@ -19,11 +20,28 @@ type NavItemType = {
 
 const navItems = {
   top: [
-    { icon: UserIcon, label: "my", href: "/my-page" },
-    { icon: CreateVoteIcon, label: "create vote", href: "/create-vote" },
-    { icon: WaitingRoomIcon, label: "betting", href: "/betting" },
+    { icon: UserIcon, id: "my-page-navigation", label: "my", href: "/my-page" },
+    {
+      icon: CreateVoteIcon,
+      id: "create-vote-page-navigation",
+      label: "create vote",
+      href: "/create-vote",
+    },
+    {
+      icon: WaitingRoomIcon,
+      id: "betting-room-navigation",
+      label: "betting",
+      href: "/betting",
+    },
   ],
-  login: [{ icon: LoginIcon, label: "login", href: "/login" }],
+  login: [
+    {
+      icon: LoginIcon,
+      id: "login-page-navigation",
+      label: "login",
+      href: "/login",
+    },
+  ],
 };
 
 function changeNavigatorPosition(href: string) {
@@ -47,8 +65,8 @@ function changeNavigatorPosition(href: string) {
 function NavItems({ items }: { items: NavItemType[] }) {
   return (
     <nav className="flex select-none flex-col items-center gap-6">
-      {items.map(({ icon, label, href }) => (
-        <NavItem key={label} icon={icon()} label={label} href={href} />
+      {items.map(({ id, icon, label, href }) => (
+        <NavItem key={label} id={id} icon={icon()} label={label} href={href} />
       ))}
     </nav>
   );
