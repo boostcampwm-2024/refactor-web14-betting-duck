@@ -17,7 +17,6 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     if (authState.isAuthenticated && location.pathname == ROUTES.LOGIN) {
       navigate({
         to: "/my-page",
-        search: { from: encodeURIComponent(ROUTES.LOGIN) },
       });
     }
 
@@ -25,6 +24,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       navigate({
         to: "/require-login",
         search: { from: encodeURIComponent(ROUTES.MYPAGE) },
+      });
+    }
+
+    if (!authState.isAuthenticated && location.pathname == ROUTES.CREATE_VOTE) {
+      navigate({
+        to: "/require-login",
+        search: { from: encodeURIComponent(ROUTES.CREATE_VOTE) },
       });
     }
   }, [authState.isAuthenticated, navigate, location.pathname]);
