@@ -77,49 +77,48 @@ export const AuthStatusTypeSchema = z.object({
 });
 
 export async function checkAuthStatus(): Promise<AuthStatusType> {
-  try {
-    const [tokenResponse, userInfoResponse] = await Promise.all([
-      fetch("/api/users/token", {
-        headers: {
-          "Cache-Control": "stale-while-revalidate",
-          Pragma: "no-cache",
-        },
-        credentials: "include",
-      }),
-      fetch("/api/users/userInfo", {
-        headers: {
-          "Cache-Control": "stale-while-revalidate",
-          Pragma: "no-cache",
-        },
-        credentials: "include",
-      }),
-    ]);
+  const tokenResponse = await fetch("/api/users/token", {
+    headers: {
+      "Cache-Control": "stale-while-revalidate",
+      Pragma: "no-cache",
+    },
+    credentials: "include",
+  });
 
-    if (!tokenResponse.ok || !userInfoResponse.ok) {
-      return {
-        isAuthenticated: false,
-        userInfo: defaultUserInfo,
-      };
-    }
-
-    const { data } = await userInfoResponse.json();
-    const result = responseUserInfoSchema.safeParse(data);
-
-    if (!result.success) {
-      return {
-        isAuthenticated: false,
-        userInfo: defaultUserInfo,
-      };
-    }
-
-    return {
-      isAuthenticated: true,
-      userInfo: result.data,
-    };
-  } catch {
+  if (!tokenResponse.ok) {
     return {
       isAuthenticated: false,
       userInfo: defaultUserInfo,
     };
   }
+
+  const userInfoResponse = await fetch("/api/users/userInfo", {
+    headers: {
+      "Cache-Control": "stale-while-revalidate",
+      Pragma: "no-cache",
+    },
+    credentials: "include",
+  });
+
+  if (!userInfoResponse.ok) {
+    return {
+      isAuthenticated: false,
+      userInfo: defaultUserInfo,
+    };
+  }
+
+  const { data } = await userInfoResponse.json();
+  const result = responseUserInfoSchema.safeParse(data);
+
+  if (!result.success) {
+    return {
+      isAuthenticated: false,
+      userInfo: defaultUserInfo,
+    };
+  }
+
+  return {
+    isAuthenticated: true,
+    userInfo: result.data,
+  };
 }
