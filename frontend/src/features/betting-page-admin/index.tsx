@@ -1,5 +1,9 @@
 import { BettingStatsDisplay } from "@/shared/components/BettingStatsDisplay/BettingStatsDisplay";
-import { useNavigate, useParams, useRouter } from "@tanstack/react-router";
+import {
+  useNavigate,
+  useRouteContext,
+  useRouter,
+} from "@tanstack/react-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSocketIO } from "@/shared/hooks/useSocketIo";
 import { BettingTimer } from "@/shared/components/BettingTimer/BettingTimer";
@@ -9,23 +13,17 @@ import { endBetRoom, refund } from "./model/api";
 import { useLayoutShift } from "@/shared/hooks/useLayoutShift";
 import { bettingRoomSchema } from "../betting-page/model/schema";
 import { DuckCoinIcon } from "@/shared/icons";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { bettingRoomQueryKey } from "@/shared/lib/bettingRoomInfo";
-import { getBettingRoomInfo } from "../betting-page/api/getBettingRoomInfo";
 import { responseBetRoomInfo } from "@betting-duck/shared";
 
 function BettingPageAdmin() {
   useLayoutShift();
-  const router = useRouter();
-  const { roomId } = useParams({
-    from: "/betting_/$roomId/vote",
-  });
 
-  const { data } = useSuspenseQuery({
-    queryKey: bettingRoomQueryKey(roomId),
-    queryFn: () => getBettingRoomInfo(roomId),
-  });
-  const parsedData = responseBetRoomInfo.safeParse(data);
+  const context = useRouteContext({ from: "/betting_/$roomId/vote/admin" });
+  const roomInfo = context.roomInfo;
+
+  const router = useRouter();
+
+  const parsedData = responseBetRoomInfo.safeParse(roomInfo);
   if (!parsedData.success) {
     throw new Error("방 정보를 불러오는데 실패했습니다.");
   }
@@ -44,6 +42,7 @@ function BettingPageAdmin() {
   >(null);
 
   // Room Information
+  const roomId = channel.id;
   const option1 = channel.options.option1;
   const option2 = channel.options.option2;
   const defaultBetAmount = channel.settings.defaultBetAmount;
