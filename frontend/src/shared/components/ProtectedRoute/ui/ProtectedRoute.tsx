@@ -14,6 +14,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const location = useLocation();
 
   useEffect(() => {
+    if (authState.isLoading) return;
+
     if (authState.isAuthenticated && location.pathname == ROUTES.LOGIN) {
       navigate({
         to: "/my-page",
@@ -33,7 +35,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         search: { from: encodeURIComponent(ROUTES.CREATE_VOTE) },
       });
     }
-  }, [authState.isAuthenticated, navigate, location.pathname]);
+  }, [
+    authState.isAuthenticated,
+    authState.isLoading,
+    navigate,
+    location.pathname,
+  ]);
 
   return <>{children}</>;
 }
