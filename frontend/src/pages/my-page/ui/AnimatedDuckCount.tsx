@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { DuckCoinIcon } from "@/shared/icons";
-
-interface DuckCoinIconProps {
-  width: number;
-  height: number;
-}
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { userInfoQueries } from "@/shared/lib/auth/authQuery";
 
 interface AnimatedDigitProps {
   digit: string;
   shouldAnimate: boolean;
-}
-
-interface AnimatedDuckCountProps {
-  value: number;
-  DuckCoinIcon: React.ComponentType<DuckCoinIconProps>;
 }
 
 const AnimatedDigit: React.FC<AnimatedDigitProps> = ({
@@ -32,8 +24,12 @@ const AnimatedDigit: React.FC<AnimatedDigitProps> = ({
   );
 };
 
-const AnimatedDuckCount: React.FC<AnimatedDuckCountProps> = ({ value }) => {
-  const [prevValue, setPrevValue] = useState<number>(value);
+const AnimatedDuckCount = memo(() => {
+  const { data: authData } = useSuspenseQuery({
+    queryKey: userInfoQueries.queryKey,
+    queryFn: userInfoQueries.queryFn,
+  });
+  const [prevValue, setPrevValue] = useState<number>(authData.duck);
   const [animatingDigits, setAnimatingDigits] = useState<Set<number>>(
     new Set(),
   );
@@ -43,9 +39,9 @@ const AnimatedDuckCount: React.FC<AnimatedDuckCountProps> = ({ value }) => {
   };
 
   useEffect(() => {
-    if (value !== prevValue) {
+    if (authData.duck !== prevValue) {
       const prevDigits = getDigits(prevValue);
-      const newDigits = getDigits(value);
+      const newDigits = getDigits(authData.duck);
       const changedPositions = new Set<number>();
 
       for (let i = newDigits.length - 1; i >= 0; i--) {
@@ -61,14 +57,14 @@ const AnimatedDuckCount: React.FC<AnimatedDuckCountProps> = ({ value }) => {
 
       const timer = setTimeout(() => {
         setAnimatingDigits(new Set());
-        setPrevValue(value);
+        setPrevValue(authData.duck);
       }, 500);
 
       return () => clearTimeout(timer);
     }
-  }, [value, prevValue]);
+  }, [authData, prevValue]);
 
-  const digits = getDigits(value);
+  const digits = getDigits(authData.duck);
 
   return (
     <div className="z-20 flex w-full items-center justify-center gap-4">
@@ -84,6 +80,6 @@ const AnimatedDuckCount: React.FC<AnimatedDuckCountProps> = ({ value }) => {
       </div>
     </div>
   );
-};
+});
 
 export { AnimatedDuckCount };

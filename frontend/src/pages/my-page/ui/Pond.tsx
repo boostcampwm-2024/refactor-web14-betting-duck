@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import { Mesh } from "three";
 import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -6,11 +6,14 @@ import {
   OrthographicCamera,
 } from "@react-three/drei";
 import { Physics, usePlane } from "@react-three/cannon";
-import { Suspense } from "react";
+import { memo, Suspense, useCallback, useEffect, useState } from "react";
 import envMap from "@assets/models/industrial_sunset_puresky_4k.hdr";
+import { FallingDuck } from "./FallingDuck";
+import { z } from "zod";
+import { responseUserInfoSchema } from "@betting-duck/shared";
 
-function Ground({ color = "#f0f4fa" }: { color?: string }) {
-  const [ref] = usePlane<THREE.Mesh>(() => ({
+const Ground = memo(() => {
+  const [ref] = usePlane<Mesh>(() => ({
     rotation: [-Math.PI / 2, 0, 0],
     position: [0, -6.5, 0],
     type: "Static",
@@ -23,12 +26,42 @@ function Ground({ color = "#f0f4fa" }: { color?: string }) {
   return (
     <mesh ref={ref} receiveShadow>
       <circleGeometry args={[16, 16]} />
-      <meshStandardMaterial color={color} roughness={0.2} metalness={0.05} />
+      <meshStandardMaterial
+        color={"#80aae9"}
+        roughness={0.2}
+        metalness={0.05}
+      />
     </mesh>
   );
-}
+});
 
-function Pond({ ducks }: { ducks: React.ElementType[] }) {
+function Pond({
+  authData,
+}: {
+  authData: z.infer<typeof responseUserInfoSchema>;
+}) {
+  const [duckModels, setDuckModels] = useState([FallingDuck]);
+
+  const addDuck = useCallback((count: number, remainDucks: number) => {
+    if (count >= remainDucks) return;
+    const timer = setTimeout(() => {
+      setDuckModels((prevDucks) => [...prevDucks, FallingDuck]);
+      addDuck(count + 1, remainDucks);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const remainDucks = authData.realDuck - duckModels.length;
+    if (remainDucks <= 0) return;
+
+    const initialTimer = setTimeout(() => {
+      addDuck(0, remainDucks);
+    }, 1000);
+
+    return () => clearTimeout(initialTimer);
+  }, [authData, duckModels.length, addDuck]);
+
   return (
     <Canvas shadows gl={{ antialias: false }} dpr={[1, 1.5]}>
       <OrthographicCamera
@@ -65,10 +98,10 @@ function Pond({ ducks }: { ducks: React.ElementType[] }) {
             restitution: 0.3,
           }}
         >
-          {ducks.map((DuckComponent, index) => (
+          {duckModels.map((DuckComponent, index) => (
             <DuckComponent key={index} />
           ))}
-          <Ground color="#80aae9" />
+          <Ground />
         </Physics>
       </Suspense>
       <Environment files={envMap} />
@@ -84,4 +117,4 @@ function Pond({ ducks }: { ducks: React.ElementType[] }) {
   );
 }
 
-export { Pond };
+export default Pond;
