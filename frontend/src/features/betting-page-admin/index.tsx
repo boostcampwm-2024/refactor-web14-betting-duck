@@ -13,6 +13,7 @@ import { endBetRoom, refund } from "./model/api";
 import { useLayoutShift } from "@/shared/hooks/useLayoutShift";
 import { bettingRoomSchema } from "../betting-page/model/schema";
 import { DuckCoinIcon } from "@/shared/icons";
+import BettingDetails from "./ui/BettingDetails";
 
 function BettingPageAdmin() {
   useLayoutShift();
@@ -36,11 +37,12 @@ function BettingPageAdmin() {
   >(null);
 
   // Room Information
-  const roomId = channel.id;
-  const option1 = channel.options.option1;
-  const option2 = channel.options.option2;
-  const defaultBetAmount = channel.settings.defaultBetAmount;
-  const timer = channel.settings.duration;
+  const {
+    id: roomId,
+    title,
+    options: { option1, option2 },
+    settings: { defaultBetAmount, duration: timer },
+  } = channel;
 
   const socket = useSocketIO({
     url: "/api/betting",
@@ -202,10 +204,6 @@ function BettingPageAdmin() {
     }
   };
 
-  const getTotalParticipants = () => {
-    return bettingInfo.option1.participants + bettingInfo.option2.participants;
-  };
-
   const getTotalBetAmount = () => {
     return bettingInfo.option1.currentBets + bettingInfo.option2.currentBets;
   };
@@ -270,35 +268,12 @@ function BettingPageAdmin() {
       <div className="flex flex-col gap-5">
         <BettingTimer socket={socket} bettingRoomInfo={roomInfo} />
         <div className="flex flex-col gap-6 p-5">
-          <div className="bg-secondary mb-4 rounded-lg p-3 text-center shadow-inner">
-            <h1 className="text-default-disabled text-md mb-1 font-bold">
-              베팅 주제
-            </h1>
-            <h1 className="text-primary mb-1 pt-2 text-4xl font-extrabold">
-              {channel.title}
-            </h1>
-            <p>
-              {status === "active"
-                ? "투표가 진행 중입니다. 투표를 취소할 수 있습니다."
-                : "투표가 종료되었습니다. 승부를 결정하세요!"}
-            </p>
-            <h1 className="text-default-disabled text-md mb-1 font-bold">
-              베팅 정보
-            </h1>
-            <p>
-              ∙ 최소 베팅 금액:{" "}
-              <span className="font-extrabold">{defaultBetAmount}</span>
-            </p>
-            <p>
-              ∙ 설정한 시간:{" "}
-              <span className="font-extrabold">{timer / 60}분</span>
-            </p>
-            <p>
-              ∙ 전체 베팅 참여자:{" "}
-              <span className="font-extrabold">{getTotalParticipants()}</span>
-            </p>
-          </div>
-
+          <BettingDetails
+            title={title}
+            defaultBetAmount={defaultBetAmount}
+            timer={timer}
+            status={status}
+          />
           {status === "timeover" ? (
             <div className="flex w-full overflow-hidden rounded-xl border">
               <div className="relative flex w-1/2">
