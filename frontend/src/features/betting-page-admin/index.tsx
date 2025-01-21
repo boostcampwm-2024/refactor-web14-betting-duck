@@ -13,21 +13,15 @@ import { endBetRoom, refund } from "./model/api";
 import { useLayoutShift } from "@/shared/hooks/useLayoutShift";
 import { bettingRoomSchema } from "../betting-page/model/schema";
 import { DuckCoinIcon } from "@/shared/icons";
-import { responseBetRoomInfo } from "@betting-duck/shared";
 
 function BettingPageAdmin() {
   useLayoutShift();
 
   const context = useRouteContext({ from: "/betting_/$roomId/vote/admin" });
   const roomInfo = context.roomInfo;
+  const channel = roomInfo.channel;
 
   const router = useRouter();
-
-  const parsedData = responseBetRoomInfo.safeParse(roomInfo);
-  if (!parsedData.success) {
-    throw new Error("방 정보를 불러오는데 실패했습니다.");
-  }
-  const { channel } = parsedData.data;
 
   const [status, setStatus] = useState(channel.status || "active");
   const [bettingInfo, setBettingInfo] = useState({
@@ -274,7 +268,7 @@ function BettingPageAdmin() {
   return (
     <div className="bg-layout-main flex h-full w-full flex-col justify-between">
       <div className="flex flex-col gap-5">
-        <BettingTimer socket={socket} bettingRoomInfo={parsedData.data} />
+        <BettingTimer socket={socket} bettingRoomInfo={roomInfo} />
         <div className="flex flex-col gap-6 p-5">
           <div className="bg-secondary mb-4 rounded-lg p-3 text-center shadow-inner">
             <h1 className="text-default-disabled text-md mb-1 font-bold">
