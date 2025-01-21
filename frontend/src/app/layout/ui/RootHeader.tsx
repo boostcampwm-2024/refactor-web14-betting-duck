@@ -1,6 +1,6 @@
 import { LogoIcon } from "@/shared/icons";
 import { Image } from "@/shared/components/Image";
-import waitingUserImage from "@assets/images/waiting-user.png";
+import waitingUserImage from "@assets/images/waiting-user.avif";
 import { Link } from "@tanstack/react-router";
 
 function UserInfo({ nickname }: { nickname: string }) {
