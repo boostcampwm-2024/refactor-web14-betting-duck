@@ -30,4 +30,4 @@ const FallingDuck = memo(() => {
   );
 });
 
-export { FallingDuck };
+export default FallingDuck;

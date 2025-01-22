@@ -6,11 +6,9 @@ import {
   OrthographicCamera,
 } from "@react-three/drei";
 import { Physics, usePlane } from "@react-three/cannon";
-import { memo, Suspense, useCallback, useEffect, useState } from "react";
-import envMap from "@assets/models/industrial_sunset_puresky_4k.hdr";
-import { FallingDuck } from "./FallingDuck";
-import { z } from "zod";
-import { responseUserInfoSchema } from "@betting-duck/shared";
+import { lazy, memo, Suspense, useCallback, useEffect, useState } from "react";
+
+const FallingDuck = lazy(() => import("./FallingDuck"));
 
 const Ground = memo(() => {
   const [ref] = usePlane<Mesh>(() => ({
@@ -35,11 +33,8 @@ const Ground = memo(() => {
   );
 });
 
-function Pond({
-  authData,
-}: {
-  authData: z.infer<typeof responseUserInfoSchema>;
-}) {
+function Pond({ realDuck }: { realDuck: number }) {
+  const [envMap, setEnvMap] = useState<string | null>(null);
   const [duckModels, setDuckModels] = useState([FallingDuck]);
 
   const addDuck = useCallback((count: number, remainDucks: number) => {
@@ -52,7 +47,7 @@ function Pond({
   }, []);
 
   useEffect(() => {
-    const remainDucks = authData.realDuck - duckModels.length;
+    const remainDucks = realDuck - duckModels.length;
     if (remainDucks <= 0) return;
 
     const initialTimer = setTimeout(() => {
@@ -60,7 +55,16 @@ function Pond({
     }, 1000);
 
     return () => clearTimeout(initialTimer);
-  }, [authData, duckModels.length, addDuck]);
+  }, [realDuck, duckModels.length, addDuck]);
+
+  useEffect(() => {
+    (async () => {
+      const env = await import(
+        "@assets/models/industrial_sunset_puresky_4k.hdr"
+      );
+      setEnvMap(env.default);
+    })();
+  }, []);
 
   return (
     <Canvas shadows gl={{ antialias: false }} dpr={[1, 1.5]}>
@@ -104,7 +108,7 @@ function Pond({
           <Ground />
         </Physics>
       </Suspense>
-      <Environment files={envMap} />
+      {envMap && <Environment files={envMap} />}
       <OrbitControls
         minPolarAngle={0}
         maxPolarAngle={Math.PI / 1.9}
