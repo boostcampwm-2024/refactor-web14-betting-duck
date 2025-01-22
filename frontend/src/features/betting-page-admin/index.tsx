@@ -164,8 +164,8 @@ function BettingPageAdmin() {
 
   const handleCancelClick = async () => {
     refund(roomId)
-      .then((data) => {
-        console.log("API 성공 결과:", data);
+      .then(() => {
+        sessionStorage.removeItem("userInfo");
         navigate({
           to: "/my-page",
         });
