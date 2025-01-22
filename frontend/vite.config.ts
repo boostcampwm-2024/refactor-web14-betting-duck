@@ -72,9 +72,6 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       target: "esnext",
-      modulePreload: {
-        polyfill: true,
-      },
       minify: "terser",
       terserOptions: {
         compress: {
@@ -116,17 +113,17 @@ export default defineConfig(({ mode }) => {
           manualChunks(id) {
             if (id.includes("node_modules")) {
               if (id.includes("@tanstack")) return "vendor-tanstack";
-              if (id.includes("react")) return "vendor-react";
-              if (id.includes("@socket")) return "vendor-socket";
+              if (id.includes("@react-three/cannon"))
+                return "vendor-react-three-cannon";
+              if (id.includes("@react-three/drei"))
+                return "vendor-react-three-drei";
+              if (id.includes("@react-three/fiber"))
+                return "vendor-react-three-fiber";
               if (id.includes("three")) return "vendor-three";
-              if (id.includes("@react-three/drei")) return "vendor-drei";
-              if (id.includes("@react-three/cannon")) return "vendor-cannon";
-              return "vendor";
-            }
+              if (id.includes("@socket")) return "vendor-socket";
+              if (id.includes("react")) return "vendor-react";
 
-            if (id.includes("/features/")) {
-              const feature = id.split("/features/")[1].split("/")[0];
-              return `feature-${feature}`;
+              return "vendor";
             }
           },
         },
@@ -135,7 +132,7 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       include: ["react", "react-dom"],
-      exclude: ["@tanstack/router"],
+      exclude: ["@tanstack/router", "three"],
     },
   };
 });
