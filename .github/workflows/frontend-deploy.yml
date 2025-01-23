@@ -26,7 +26,7 @@ jobs:
         run: |
           ssh -i /tmp/deploy_key.pem -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
             echo "Connected to the server"
-            cd /refactor-web14-betting-duck
+            cd /root/refactor-web14-betting-duck
             git pull origin dev
             docker exec betting_duck_app sh -c "cd /app/frontend && pnpm install && pnpm build"
           EOF
