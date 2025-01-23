@@ -1,4 +1,4 @@
-import { BettingPageAdmin } from "@/features/betting-page-admin";
+import { BettingPageAdmin } from "@/pages/betting-page-admin";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { GlobalErrorComponent } from "@/shared/components/Error/GlobalError";
 import { validateRoomAccess } from "@/shared/utils/roomValidation";

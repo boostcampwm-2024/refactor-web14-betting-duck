@@ -8,7 +8,7 @@ import {
 import { NavItem } from "./item";
 import styles from "./style.module.css";
 import { useLocation } from "@tanstack/react-router";
-import { LogoutButton } from "@/features/login-page/ui/components/Logout";
+import { LogoutButton } from "@/pages/login-page/ui/components/Logout";
 import { useQuery } from "@tanstack/react-query";
 import { authQueries } from "@/shared/lib/auth/authQuery";
 

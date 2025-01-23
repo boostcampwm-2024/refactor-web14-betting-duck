@@ -3,17 +3,17 @@ import {
   Outlet,
   ErrorComponent,
 } from "@tanstack/react-router";
-import { Chat } from "@/features/chat";
+import { Chat } from "@/pages/chat";
 import { cn } from "@/shared/misc";
-import { AccessError } from "@/features/waiting-room/error/AccessError";
-import { Unauthorized } from "@/features/waiting-room/error/Unauthorized";
-import { Forbidden } from "@/features/waiting-room/error/Forbidden";
+import { AccessError } from "@/pages/waiting-room/error/AccessError";
+import { Unauthorized } from "@/pages/waiting-room/error/Unauthorized";
+import { Forbidden } from "@/pages/waiting-room/error/Forbidden";
 import { Suspense } from "react";
 import { LoadingAnimation } from "@/shared/components/Loading";
 import { bettingRoomQueryKey } from "@/shared/lib/bettingRoomInfo";
-import { getBettingRoomInfo } from "@/features/betting-page/api/getBettingRoomInfo";
+import { getBettingRoomInfo } from "@/pages/betting-page/api/getBettingRoomInfo";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { BettingProvider } from "@/features/betting-page/provider/BettingProvider";
+import { BettingProvider } from "@/pages/betting-page/provider/BettingProvider";
 
 interface RouteLoaderData {
   roomId: string;
