@@ -18,7 +18,7 @@ export const Route = createFileRoute("/betting_/$roomId/vote/admin")({
     return { roomInfo };
   },
 
-  shouldReload: () => true,
+  shouldReload: () => false,
   errorComponent: ({ error }) => {
     return <GlobalErrorComponent error={error} to="/" />;
   },
