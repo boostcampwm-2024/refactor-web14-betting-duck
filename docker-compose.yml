@@ -31,9 +31,11 @@ services:
     container_name: nginx-server
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf
       - ./frontend/dist:/static
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - betting_duck_app_dev
     networks:
