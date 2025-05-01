@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  dev-postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bettingduck
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  dev-redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  dev-backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.dev
+    ports:
+      - "5001:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@dev-postgres:5432/bettingduck
+      REDIS_HOST: dev-redis
+      REDIS_PORT: 6379
+    depends_on:
+      - dev-postgres
+      - dev-redis
+    volumes:
+      - .:/app
+    command: pnpm start:dev
+
+volumes:
+  postgres_data:

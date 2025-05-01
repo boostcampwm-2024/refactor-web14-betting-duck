@@ -1,0 +1,13 @@
+FROM node:18
+
+WORKDIR /app
+
+COPY . .
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+RUN CI=true pnpm install --filter @betting-duck/backend...
+
+WORKDIR /app/backend
+
+CMD ["pnpm", "start:dev"]
