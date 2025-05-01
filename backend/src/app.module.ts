@@ -16,6 +16,7 @@ import { DBManagerModule } from "./utils/db.manager.module";
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ".env.docker",
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
