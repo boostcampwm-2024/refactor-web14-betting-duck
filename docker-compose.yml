@@ -103,6 +103,20 @@ services:
     profiles:
       - dev
 
+  frontend_builder:
+    image: node:22.11.0-alpine
+    container_name: frontend_builder
+    working_dir: /app/frontend
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "npm install -g pnpm && \
+      pnpm install && \
+      pnpm run build"
+    networks:
+      - betting_duck_network
+    profiles:
+      - dev
 
   postgres_db:
     image: postgres:15
