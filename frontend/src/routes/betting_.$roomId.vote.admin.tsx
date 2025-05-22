@@ -11,7 +11,8 @@ export const Route = createFileRoute("/betting_/$roomId/vote/admin")({
 
     if (!roomInfo.channel.isAdmin) {
       throw redirect({
-        to: `/betting/${roomId}/vote/voting`,
+        to: "/betting/$roomId/vote/voting",
+        params: { roomId },
       });
     }
 

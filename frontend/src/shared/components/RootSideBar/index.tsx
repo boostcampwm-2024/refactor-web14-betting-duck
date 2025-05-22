@@ -50,7 +50,7 @@ function NavItems({ items }: { items: NavItemType[] }) {
   return (
     <nav className="flex select-none flex-col items-center gap-6">
       {items.map(({ icon, label, href }) => (
-        <NavItem key={label} icon={icon()} label={label} href={href} />
+        <NavItem to={href} key={label} icon={icon()} label={label} />
       ))}
     </nav>
   );
