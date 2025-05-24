@@ -1,26 +1,26 @@
-import { z } from "zod";
-import { useQueryClient } from "@tanstack/react-query";
-import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";
 import { useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { authQueries } from "@/shared/lib/auth/authQuery";
+import type { AuthenticateUserInfo } from "@betting-duck/shared";
 
-type AuthStatusType = z.infer<typeof AuthStatusTypeSchema>;
-
-function useDuckState(authData: AuthStatusType) {
+function useDuckState(authData: AuthenticateUserInfo) {
   const queryClient = useQueryClient();
 
   const currentDuck = authData.userInfo.duck;
   const numberOfDucks = authData.userInfo.realDuck;
 
   const addDuck = useCallback(() => {
-    queryClient.setQueryData(authQueries.queryKey, (old: AuthStatusType) => ({
-      ...old,
-      userInfo: {
-        ...old.userInfo,
-        duck: old.userInfo.duck - 30,
-        realDuck: old.userInfo.realDuck + 1,
-      },
-    }));
+    queryClient.setQueryData(
+      authQueries.queryKey,
+      (old: AuthenticateUserInfo) => ({
+        ...old,
+        userInfo: {
+          ...old.userInfo,
+          duck: old.userInfo.duck - 30,
+          realDuck: old.userInfo.realDuck + 1,
+        },
+      }),
+    );
   }, [queryClient]);
 
   return {

@@ -1,4 +1,7 @@
-import { bettinResultSchema, type BetResultResponseType } from "./schema";
+import {
+  betResultDataSchema,
+  type BetResultDataType,
+} from "@betting-duck/shared";
 
 interface BetResultResponseSuccess {
   status: 200;
@@ -23,7 +26,7 @@ type BetResultResponse = BetResultResponseSuccess | BetResultResponseError;
 
 export async function getBetResults(
   betRoomId: string,
-): Promise<BetResultResponseType> {
+): Promise<BetResultDataType> {
   try {
     const response = await fetch(`/api/betresults/${betRoomId}`, {
       method: "GET",
@@ -36,7 +39,7 @@ export async function getBetResults(
     }
 
     const responseData: BetResultResponse = await response.json();
-    const parsedData = bettinResultSchema.safeParse(responseData.data);
+    const parsedData = betResultDataSchema.safeParse(responseData.data);
     if (!parsedData.success) {
       console.error("Invalid response data:", parsedData.error);
       throw new Error("베팅 결과를 가져오는데 실패했습니다.");

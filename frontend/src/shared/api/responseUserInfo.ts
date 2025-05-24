@@ -1,9 +1,6 @@
-import { responseUserInfoSchema } from "@betting-duck/shared";
-import { z } from "zod";
+import { userInfoSchema, type UserInfo } from "@betting-duck/shared";
 
-async function responseUserInfo(): Promise<
-  z.infer<typeof responseUserInfoSchema>
-> {
+async function responseUserInfo(): Promise<UserInfo> {
   const response = await fetch("/api/users/userInfo");
   if (!response.ok) {
     throw new Error(
@@ -11,14 +8,9 @@ async function responseUserInfo(): Promise<
     );
   }
 
-  const { data } = await response.json();
-  const result = responseUserInfoSchema.safeParse(data);
-  if (!result.success) {
-    console.error(result.error);
-    throw new Error("사용자 정보를 불러오는데 실패했습니다.");
-  }
-
-  return result.data;
+  const json = await response.json();
+  const parsed: UserInfo = userInfoSchema.parse(json.data);
+  return parsed;
 }
 
 export { responseUserInfo };

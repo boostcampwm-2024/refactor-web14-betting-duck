@@ -7,11 +7,9 @@ import {
 } from "@/shared/components/Dialog";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { STORAGE_KEY } from "@/features/betting-page/model/var";
-import { useUserContext } from "@/shared/hooks/useUserContext";
 
 function PredictButton() {
   const { socket } = useChat();
-  const { setUserInfo } = useUserContext();
   const { roomId } = useParams({ from: "/betting_/$roomId/vote" });
   const navigate = useNavigate();
 
@@ -21,7 +19,6 @@ function PredictButton() {
         asChild
         onClick={() => {
           socket.emit("leaveRoom", { roomId });
-          setUserInfo({ role: "user", roomId: undefined });
           sessionStorage.removeItem(STORAGE_KEY);
           navigate({ to: "/my-page" });
         }}

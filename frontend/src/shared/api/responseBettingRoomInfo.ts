@@ -1,5 +1,5 @@
 import { responseBetRoomInfo } from "@betting-duck/shared";
-import { summaryResponseSchema } from "@betting-duck/shared/schemas/bet/socket/response";
+import { summaryResponseSchema } from "@betting-duck/shared";
 import { EnsureQueryDataOptions } from "@tanstack/react-query";
 import { z } from "zod";
 

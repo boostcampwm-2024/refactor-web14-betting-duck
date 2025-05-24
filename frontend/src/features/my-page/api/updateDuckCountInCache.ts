@@ -1,7 +1,6 @@
-import { z } from "zod";
 import { authQueries } from "@/shared/lib/auth/authQuery";
-import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";
 import { useQueryClient } from "@tanstack/react-query";
+import type { AuthenticateUserInfo } from "@betting-duck/shared";
 
 async function updateDuckCountInCache(
   queryClient: ReturnType<typeof useQueryClient>,
@@ -12,7 +11,7 @@ async function updateDuckCountInCache(
 ) {
   await queryClient.setQueryData(
     authQueries.queryKey,
-    (old: z.infer<typeof AuthStatusTypeSchema>) => ({
+    (old: AuthenticateUserInfo) => ({
       ...old,
       userInfo: {
         ...old.userInfo,

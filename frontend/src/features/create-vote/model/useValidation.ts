@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ValidationEvent } from "./types";
+import { EVENT } from "@/shared/constants";
 
 export function useValidation() {
   const [validInputs, setValidInputs] = useState(new Set<string>());
@@ -33,9 +34,9 @@ export function useValidation() {
       });
     };
 
-    window.addEventListener("form-validation", handleValidation);
+    window.addEventListener(EVENT.FORM_VALIDATION, handleValidation);
     return () =>
-      window.removeEventListener("form-validation", handleValidation);
+      window.removeEventListener(EVENT.FORM_VALIDATION, handleValidation);
   }, []);
 
   const isFormValid = useMemo(() => {

@@ -10,7 +10,7 @@ import {
 import { DialogContext } from "@/shared/components/Dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { bettingRoomQueryKey } from "@/shared/lib/bettingRoomInfo";
-import { BettingRoomInfo } from "@/shared/types";
+import type { BettingRoomInfo } from "@betting-duck/shared";
 
 type WaitingRoomInfo = z.infer<typeof responseBetRoomInfo>;
 

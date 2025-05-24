@@ -1,9 +1,8 @@
-import React from "react";
+import { z } from "zod";
 import { ChartTitle } from "./ui/ChatTitle";
+import type { BettingRoomInfo } from "@betting-duck/shared";
 import { PredictButton } from "./ui/PredictButton";
 import { channelSchema } from "@betting-duck/shared";
-import { z } from "zod";
-import { BettingRoomInfo } from "@/shared/types";
 
 function bettingRoomTypeGuard(
   data: unknown,
@@ -18,18 +17,16 @@ function ChatHeader({ bettingRoomInfo }: { bettingRoomInfo: BettingRoomInfo }) {
   }
 
   return (
-    <React.Fragment>
-      <div className="bg-layout-main relative flex h-fit w-full items-center px-4">
-        <div className="bg-primary text-secondary font-nanum-eb shadow-long flex w-full flex-row items-center justify-between rounded-lg px-9 py-4">
-          <ChartTitle title={channel.title} />
-          <PredictButton />
-        </div>
-        <div
-          id="message-container-scroll-top"
-          className="absolute -bottom-[16px] left-0 h-[1px] w-full"
-        />
+    <div className="bg-layout-main relative flex h-fit w-full items-center px-4">
+      <div className="bg-primary text-secondary font-nanum-eb shadow-long flex w-full flex-row items-center justify-between rounded-lg px-9 py-4">
+        <ChartTitle title={channel.title} />
+        <PredictButton />
       </div>
-    </React.Fragment>
+      <div
+        id="message-container-scroll-top"
+        className="absolute -bottom-[16px] left-0 h-[1px] w-full"
+      />
+    </div>
   );
 }
 

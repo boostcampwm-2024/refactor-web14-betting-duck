@@ -1,19 +1,15 @@
 import { DuckCoinIcon } from "@/shared/icons";
 import React from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { authQueries } from "@/shared/lib/auth/authQuery";
-import { BettingRoomInfo } from "@/shared/types";
+import { BettingRoomInfo } from "@betting-duck/shared";
+import { useUserInfo } from "@/shared/hooks/useUserInfo";
 
 function BettingFooter({
   bettingRoomInfo,
 }: {
   bettingRoomInfo: BettingRoomInfo;
 }) {
-  const { data: authData } = useSuspenseQuery({
-    queryKey: authQueries.queryKey,
-    queryFn: authQueries.queryFn,
-  });
-  const duckCoin = authData.userInfo.duck;
+  const { data: userInfo } = useUserInfo();
+  const duckCoin = userInfo.duck;
 
   const remainingAmount = React.useMemo(
     () => duckCoin - bettingRoomInfo.placeBetAmount,

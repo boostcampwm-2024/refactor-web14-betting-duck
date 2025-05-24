@@ -1,11 +1,11 @@
+import { z } from "zod";
 import { STORAGE_KEY } from "@/features/betting-page/model/var";
 import { PredictDetail } from "@/features/predict-detail";
 import { GlobalErrorComponent } from "@/shared/components/Error/GlobalError";
 import { getSessionItem } from "@/shared/hooks/useSessionStorage";
-import { BettingRoomInfoSchema } from "@/shared/types";
-import { betResultResponseSchema } from "@betting-duck/shared";
+import { betResultDataSchema } from "@betting-duck/shared";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { z } from "zod";
+import { bettingRoomInfoSchema } from "@betting-duck/shared";
 
 const PersonalBetResultResponseSchema = z.object({
   betAmount: z.coerce.number().int().min(0),
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/betting_/$roomId/vote/resultDetail")({
     }
 
     const { data } = await bettingResultResponse.json();
-    const bettingResult = betResultResponseSchema.safeParse(data);
+    const bettingResult = betResultDataSchema.safeParse(data);
 
     if (!bettingResult.success) {
       throw redirect({
@@ -101,7 +101,7 @@ export const Route = createFileRoute("/betting_/$roomId/vote/resultDetail")({
   onLeave: async ({ params, context: { queryClient } }) => {
     const { roomId } = params;
     const bettingData = queryClient.getQueryData(["bettingRoom", roomId]);
-    const bettingRoomInfo = BettingRoomInfoSchema.safeParse(bettingData);
+    const bettingRoomInfo = bettingRoomInfoSchema.safeParse(bettingData);
     if (!bettingRoomInfo.success) {
       throw new Error("방 정보를 불러오는데 실패했습니다.");
     }

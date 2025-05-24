@@ -1,17 +1,13 @@
 import { Suspense, lazy } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { userInfoQueries } from "@/shared/lib/auth/authQuery";
 import { AnimatedDuckCount } from "./AnimatedDuckCount";
 import { PurchaseButton } from "./PurchaseButton";
+import { useUserInfo } from "@/shared/hooks/useUserInfo";
 
 const Pond = lazy(() => import("./Pond"));
 
 function MyPage() {
-  const { data: authData } = useSuspenseQuery({
-    queryKey: userInfoQueries.queryKey,
-    queryFn: userInfoQueries.queryFn,
-  });
+  const { data: userInfo } = useUserInfo();
   const navigate = useNavigate();
 
   return (
@@ -24,11 +20,11 @@ function MyPage() {
         <AnimatedDuckCount />
         <Suspense fallback={null}>
           <div className="absolute left-0 top-0 z-10 h-full max-h-[600px] w-full max-w-[460px] px-5">
-            <Pond realDuck={authData.realDuck} />
+            <Pond realDuck={userInfo.realDuck} />
           </div>
         </Suspense>
         <div className="z-20 flex gap-8">
-          <PurchaseButton authData={authData} />
+          <PurchaseButton userInfo={userInfo} />
           <button
             className="bg-default text-layout-main rounded-xl px-6 py-3 text-xl"
             onClick={() => navigate({ to: "/create-vote", replace: true })}

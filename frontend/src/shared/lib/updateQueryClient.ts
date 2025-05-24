@@ -1,9 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
 import { authQueries } from "../lib/auth/authQuery";
-import { z } from "zod";
-import { AuthStatusTypeSchema } from "../lib/auth/guard";
+import { AuthenticateUserInfo } from "@betting-duck/shared";
 
-type QueryData = z.infer<typeof AuthStatusTypeSchema>;
+type QueryData = AuthenticateUserInfo;
 
 async function updateQueryClient(
   queryClient: QueryClient,

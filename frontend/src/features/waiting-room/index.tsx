@@ -8,8 +8,8 @@ import { useParams } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { bettingRoomQueryKey } from "@/shared/lib/bettingRoomInfo";
 import { getBettingRoomInfo } from "../betting-page/api/getBettingRoomInfo";
-import { BettingRoomInfoSchema } from "@/shared/types";
 import { Alert, Snackbar } from "@mui/material";
+import { bettingRoomInfoSchema } from "@betting-duck/shared";
 import React from "react";
 
 function WaitingRoom() {
@@ -21,7 +21,7 @@ function WaitingRoom() {
     queryKey: bettingRoomQueryKey(roomId),
     queryFn: () => getBettingRoomInfo(roomId),
   });
-  const parsedData = BettingRoomInfoSchema.safeParse(data);
+  const parsedData = bettingRoomInfoSchema.safeParse(data);
   if (!parsedData.success) {
     throw new Error("방 정보를 불러오는데 실패했습니다.");
   }

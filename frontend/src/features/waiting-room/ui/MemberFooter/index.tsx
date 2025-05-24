@@ -1,7 +1,6 @@
 import React from "react";
 import { useWaitingContext } from "../../hooks/use-waiting-context";
 import { useNavigate } from "@tanstack/react-router";
-import { useUserContext } from "@/shared/hooks/useUserContext";
 import { z } from "zod";
 import { responseBetRoomInfo } from "@betting-duck/shared";
 
@@ -14,7 +13,6 @@ function MemberFooter({
 }) {
   const { socket } = useWaitingContext();
   const [isBettingStarted, setIsBettingStarted] = React.useState(false);
-  const userContext = useUserContext();
   const navigate = useNavigate();
   const { channel } = bettingRoomInfo;
   const roomId = channel.id;
@@ -51,7 +49,6 @@ function MemberFooter({
 
   function leaveRoom() {
     socket.emit("leave-room", { roomId });
-    userContext.setUserInfo({ role: "user", roomId: undefined });
     navigate({
       to: "/my-page",
       params: { roomId },

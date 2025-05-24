@@ -1,14 +1,11 @@
-import { responseUserInfoSchema } from "@betting-duck/shared";
-import { z } from "zod";
+import {
+  authenticatedUserInfoSchema,
+  userInfoSchema,
+} from "@betting-duck/shared";
 
-export type UserInfoType = z.infer<typeof responseUserInfoSchema>;
+import type { AuthenticateUserInfo, UserInfo } from "@betting-duck/shared";
 
-type AuthStatusType = {
-  isAuthenticated: boolean;
-  userInfo: UserInfoType;
-};
-
-const defaultUserInfo: UserInfoType = {
+const defaultUserInfo: UserInfo = {
   message: "OK",
   role: "user",
   nickname: "",
@@ -16,12 +13,7 @@ const defaultUserInfo: UserInfoType = {
   realDuck: 0,
 };
 
-export const AuthStatusTypeSchema = z.object({
-  isAuthenticated: z.boolean(),
-  userInfo: responseUserInfoSchema,
-});
-
-export async function checkAuthStatus(): Promise<AuthStatusType> {
+export async function getAuthenciateUserInfo(): Promise<AuthenticateUserInfo> {
   const tokenResponse = await fetch("/api/users/token", {
     headers: {
       "Cache-Control": "stale-while-revalidate",
@@ -53,8 +45,7 @@ export async function checkAuthStatus(): Promise<AuthStatusType> {
   }
 
   const { data } = await userInfoResponse.json();
-  const result = responseUserInfoSchema.safeParse(data);
-
+  const result = userInfoSchema.safeParse(data);
   if (!result.success) {
     return {
       isAuthenticated: false,
@@ -82,7 +73,7 @@ export async function getUserInfo() {
   }
 
   const { data } = await userInfoResponse.json();
-  const result = responseUserInfoSchema.safeParse(data);
+  const result = authenticatedUserInfoSchema.safeParse(data);
 
   if (!result.success) {
     return defaultUserInfo;

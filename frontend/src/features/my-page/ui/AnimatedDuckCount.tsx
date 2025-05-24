@@ -1,7 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import { DuckCoinIcon } from "@/shared/icons";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { userInfoQueries } from "@/shared/lib/auth/authQuery";
+import { useUserInfo } from "@/shared/hooks/useUserInfo";
 
 interface AnimatedDigitProps {
   digit: string;
@@ -25,11 +24,8 @@ const AnimatedDigit: React.FC<AnimatedDigitProps> = ({
 };
 
 const AnimatedDuckCount = memo(() => {
-  const { data: authData } = useSuspenseQuery({
-    queryKey: userInfoQueries.queryKey,
-    queryFn: userInfoQueries.queryFn,
-  });
-  const [prevValue, setPrevValue] = useState<number>(authData.duck);
+  const { data: userInfo } = useUserInfo();
+  const [prevValue, setPrevValue] = useState<number>(userInfo.duck);
   const [animatingDigits, setAnimatingDigits] = useState<Set<number>>(
     new Set(),
   );
@@ -39,9 +35,9 @@ const AnimatedDuckCount = memo(() => {
   };
 
   useEffect(() => {
-    if (authData.duck !== prevValue) {
+    if (userInfo.duck !== prevValue) {
       const prevDigits = getDigits(prevValue);
-      const newDigits = getDigits(authData.duck);
+      const newDigits = getDigits(userInfo.duck);
       const changedPositions = new Set<number>();
 
       for (let i = newDigits.length - 1; i >= 0; i--) {
@@ -57,14 +53,14 @@ const AnimatedDuckCount = memo(() => {
 
       const timer = setTimeout(() => {
         setAnimatingDigits(new Set());
-        setPrevValue(authData.duck);
+        setPrevValue(userInfo.duck);
       }, 500);
 
       return () => clearTimeout(timer);
     }
-  }, [authData, prevValue]);
+  }, [userInfo, prevValue]);
 
-  const digits = getDigits(authData.duck);
+  const digits = getDigits(userInfo.duck);
 
   return (
     <div className="z-20 flex w-full items-center justify-center gap-4">

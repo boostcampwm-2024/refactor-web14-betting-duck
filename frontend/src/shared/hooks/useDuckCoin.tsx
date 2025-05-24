@@ -1,5 +1,5 @@
 import React from "react";
-import { responseUserInfoSchema } from "@betting-duck/shared";
+import { userInfoSchema } from "@betting-duck/shared";
 
 function useDuckCoin() {
   const [duckCoin, setDuckCoin] = React.useState(0);
@@ -12,7 +12,7 @@ function useDuckCoin() {
       }
 
       const { data } = await response.json();
-      const result = responseUserInfoSchema.safeParse(data);
+      const result = userInfoSchema.safeParse(data);
       if (!result.success) {
         console.error(result.error);
         throw new Error("사용자 정보를 불러오는데 실패했습니다.");

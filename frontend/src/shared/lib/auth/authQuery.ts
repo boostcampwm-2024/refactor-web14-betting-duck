@@ -1,21 +1,15 @@
-import { checkAuthStatus, getUserInfo } from "./guard";
-import { QueryFunction } from "@tanstack/react-query";
-import { AuthStatusTypeSchema } from "./guard";
-import { z } from "zod";
-import { responseUserInfoSchema } from "@betting-duck/shared";
+import { getAuthenciateUserInfo, getUserInfo } from "./guard";
 
 const authQueries = {
   queryKey: ["auth"],
-  queryFn: checkAuthStatus as QueryFunction<
-    z.infer<typeof AuthStatusTypeSchema>
-  >,
+  queryFn: getAuthenciateUserInfo,
   gcTime: 1000 * 60 * 60 * 24,
   staleTime: 1000 * 60 * 60,
 };
 
 const userInfoQueries = {
   queryKey: ["auth", "userInfos"],
-  queryFn: getUserInfo as QueryFunction<z.infer<typeof responseUserInfoSchema>>,
+  queryFn: getUserInfo,
 };
 
 export { authQueries, userInfoQueries };

@@ -1,12 +1,11 @@
-import { z } from "zod";
 import { useCallback } from "react";
 import { useUserContext } from "@/shared/hooks/useUserContext";
 import { useSetRecoilState } from "recoil";
 import { useQueryClient } from "@tanstack/react-query";
 import { Auth } from "@/app/provider/RouterProvider/lib/auth";
 import { authQueries } from "@/shared/lib/auth/authQuery";
-import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";
 import { useNavigate } from "@tanstack/react-router";
+import { AuthenticateUserInfo } from "@betting-duck/shared";
 
 export const useLogout = () => {
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ export const useLogout = () => {
 
       queryClient.setQueryData(
         authQueries.queryKey,
-        (prev: z.infer<typeof AuthStatusTypeSchema>) => {
+        (prev: AuthenticateUserInfo) => {
           console.log("prev", prev);
           return {
             ...prev,

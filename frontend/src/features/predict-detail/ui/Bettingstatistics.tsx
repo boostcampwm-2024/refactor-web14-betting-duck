@@ -1,15 +1,17 @@
 import { ProgressBar } from "@/shared/components/ProgressBar";
 import { PeoplesIcon } from "@/shared/icons";
-import { bettinResultSchema } from "../model/schema";
-import { z } from "zod";
-import { responseBetRoomInfo } from "@betting-duck/shared";
+
+import type {
+  BetResultDataType,
+  responseBetRoomInfoType,
+} from "@betting-duck/shared";
 
 function BettingStatistics({
   betResults,
   channel,
 }: {
-  betResults: z.infer<typeof bettinResultSchema>;
-  channel: z.infer<typeof responseBetRoomInfo>["channel"];
+  betResults: BetResultDataType;
+  channel: responseBetRoomInfoType["channel"];
 }) {
   const getTotalParticipants = () =>
     Number(betResults.option_1_total_participants) +

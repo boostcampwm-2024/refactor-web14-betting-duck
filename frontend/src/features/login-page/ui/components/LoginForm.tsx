@@ -4,19 +4,16 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../model/store";
 import { Warning } from "./Warning";
 import { useNavigate } from "@tanstack/react-router";
-import { useUserContext } from "@/shared/hooks/useUserContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { authQueries } from "@/shared/lib/auth/authQuery";
-import { z } from "zod";
-import { AuthStatusTypeSchema } from "@/shared/lib/auth/guard";
 import { useAuthState } from "@/shared/hooks/useAuthState";
+import type { AuthenticateUserInfo } from "@betting-duck/shared";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState(false);
   const navigate = useNavigate();
-  const { setUserInfo } = useUserContext();
   const { error, handleLogin } = useAuthStore();
   const queryClient = useQueryClient();
   const { setAuthState } = useAuthState();
@@ -26,15 +23,10 @@ function LoginForm() {
     const result = await handleLogin({ email, password });
     if (result.success) {
       const { data } = result.data;
-      setUserInfo({
-        role: "user",
-        nickname: data.nickname,
-        isAuthenticated: true,
-      });
 
       queryClient.setQueryData(
         authQueries.queryKey,
-        (prev: z.infer<typeof AuthStatusTypeSchema>) => ({
+        (prev: AuthenticateUserInfo) => ({
           ...prev,
           userInfo: {
             role: "guest",

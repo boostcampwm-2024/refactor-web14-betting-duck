@@ -1,3 +1,4 @@
+import { EVENT } from "@/shared/constants";
 import React from "react";
 
 function getFocusableElements(container: HTMLElement): HTMLElement[] {
@@ -63,12 +64,12 @@ export function useFocusLock(
     const handleMouseDown = (event: MouseEvent) =>
       handleOutsideClick(event, container, toggleOpen);
 
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener(EVENT.KEYDOWN, handleKeyDown);
+    document.addEventListener(EVENT.MOUSE_DOWN, handleMouseDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener(EVENT.KEYDOWN, handleKeyDown);
+      document.removeEventListener(EVENT.MOUSE_DOWN, handleMouseDown);
       previousActiveElement.current?.focus();
     };
   }, [containerRef, toggleOpen]);

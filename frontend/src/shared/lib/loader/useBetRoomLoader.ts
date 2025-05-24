@@ -2,13 +2,13 @@ import { type QueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   responseBetRoomInfo,
-  responseUserInfoSchema,
+  userInfoSchema,
+  UserInfo,
 } from "@betting-duck/shared";
 import { betRoomQueries } from "@/shared/api/responseBettingRoomInfo";
 import { userInfoQueries } from "@/shared/hooks/useUserInfo";
 
 type BetRoomInfo = z.infer<typeof responseBetRoomInfo>;
-type UserInfo = z.infer<typeof responseUserInfoSchema>;
 
 interface LoadBetRoomParams {
   roomId: string;
@@ -22,7 +22,7 @@ function isBetRoomInfo(data: unknown): data is BetRoomInfo {
 }
 
 function isUserInfo(data: unknown): data is UserInfo {
-  const result = responseUserInfoSchema.safeParse(data);
+  const result = userInfoSchema.safeParse(data);
   return result.success;
 }
 

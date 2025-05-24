@@ -4,7 +4,7 @@ import { TotalBettingDisplay } from "./TotalBettingDisplay";
 import { BettingHeader } from "./BettingHeader";
 import { BettingInput } from "./BettingInput";
 import { BettingFooter } from "./BettingFooter";
-import { BettingRoomInfo } from "@/shared/types";
+import { BettingRoomInfo } from "@betting-duck/shared";
 
 function BettingContainer({
   socket,

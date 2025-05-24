@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "declarationMap": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "composite": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@vars/*": ["./src/vars/*"]
+    }
+  },
+  "include": ["src/**/*", "src/schemas/**/*", "src/vars/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

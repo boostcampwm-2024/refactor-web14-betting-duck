@@ -4,6 +4,7 @@ import { MessageList } from "./ui/MessageList";
 import { messageResponseSchema } from "@betting-duck/shared";
 import Message from "./ui/Message";
 import { useParams } from "@tanstack/react-router";
+import { getRandomColor, getRandomRadius } from "../../utils";
 
 interface Message {
   message: string;
@@ -13,27 +14,6 @@ interface Message {
     nickname: string;
   };
 }
-
-const randomColor = () => {
-  const colors = [
-    "text-pink-500",
-    "text-purple-500",
-    "text-blue-500",
-    "text-orange-500",
-    "text-red-500",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
-};
-
-const randomRadius = () => {
-  const radiuses = [
-    "rounded-tl-lg rounded-bl-lg",
-    "rounded-tl-lg rounded-bl-lg rounded-br-lg",
-    "rounded-tl-lg rounded-bl-lg rounded-bl-lg",
-    "rounded-tl-lg rounded-bl-lg rounded-bl-lg",
-  ];
-  return radiuses[Math.floor(Math.random() * radiuses.length)];
-};
 
 function ChatMessages({ nickname }: { nickname: string }) {
   const { socket } = useChat();
@@ -46,8 +26,8 @@ function ChatMessages({ nickname }: { nickname: string }) {
   React.useEffect(() => {
     socket.on("message", (data) => {
       const message = messageResponseSchema.safeParse(data);
-      const color = randomColor();
-      const radius = randomRadius();
+      const color = getRandomColor();
+      const radius = getRandomRadius();
       if (!message.success) {
         console.error(message.error.errors);
         return;

@@ -11,9 +11,10 @@ import { BettingSharedLink } from "@/shared/components/BettingSharedLink/Betting
 import { PercentageDisplay } from "@/shared/components/PercentageDisplay/PercentageDisplay";
 import { endBetRoom, refund } from "./model/api";
 import { useLayoutShift } from "@/shared/hooks/useLayoutShift";
-import { bettingRoomSchema } from "../betting-page/model/schema";
 import { DuckCoinIcon } from "@/shared/icons";
 import BettingDetails from "./ui/BettingDetails";
+import { bettingProgressInfoSchema } from "@betting-duck/shared";
+import { useBettingRoomInfo } from "@/shared/hooks/useBettingRoomInfo";
 
 function BettingPageAdmin() {
   useLayoutShift();
@@ -43,6 +44,7 @@ function BettingPageAdmin() {
     options: { option1, option2 },
     settings: { defaultBetAmount, duration: timer },
   } = channel;
+  const { data: bettingRoomInfo } = useBettingRoomInfo(roomId);
 
   const socket = useSocketIO({
     url: "/api/betting",
@@ -115,7 +117,7 @@ function BettingPageAdmin() {
     if (!socket) return;
 
     socket.on("fetchBetRoomInfo", (data) => {
-      const result = bettingRoomSchema.safeParse(data);
+      const result = bettingProgressInfoSchema.safeParse(data);
       if (!result.success) {
         console.error(result.error.errors);
         return;
@@ -266,7 +268,7 @@ function BettingPageAdmin() {
   return (
     <div className="bg-layout-main flex h-full w-full flex-col justify-between">
       <div className="flex flex-col gap-5">
-        <BettingTimer socket={socket} bettingRoomInfo={roomInfo} />
+        <BettingTimer socket={socket} bettingRoomInfo={bettingRoomInfo} />
         <div className="flex flex-col gap-6 p-5">
           <BettingDetails
             title={title}
