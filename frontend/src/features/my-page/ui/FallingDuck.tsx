@@ -1,8 +1,6 @@
-import { Group } from "three";
 import { useBox } from "@react-three/cannon";
-import { Gltf } from "@react-three/drei";
-import duckModel from "@/assets/models/betting-duck.glb";
 import { memo } from "react";
+import { Instance } from "@react-three/drei";
 
 const FallingDuck = memo(() => {
   const randomX = (Math.random() - 0.5) * 2;
@@ -21,12 +19,9 @@ const FallingDuck = memo(() => {
   }));
 
   return (
-    <Gltf
-      ref={ref as React.RefObject<Group>}
-      castShadow
-      receiveShadow
-      src={duckModel}
-    />
+    <group>
+      <Instance ref={ref} />
+    </group>
   );
 });
 

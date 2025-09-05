@@ -1,70 +1,22 @@
-import { Mesh } from "three";
 import { Canvas } from "@react-three/fiber";
+import { Physics } from "@react-three/cannon";
+import { Suspense, useState } from "react";
 import {
   OrbitControls,
   Environment,
   OrthographicCamera,
 } from "@react-three/drei";
-import { Physics, usePlane } from "@react-three/cannon";
-import { lazy, memo, Suspense, useCallback, useEffect, useState } from "react";
-
-const FallingDuck = lazy(() => import("./FallingDuck"));
-
-const Ground = memo(() => {
-  const [ref] = usePlane<Mesh>(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    position: [0, -6.5, 0],
-    type: "Static",
-    material: {
-      friction: 0.5,
-      restitution: 0.7,
-    },
-  }));
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <circleGeometry args={[16, 16]} />
-      <meshStandardMaterial
-        color={"#80aae9"}
-        roughness={0.2}
-        metalness={0.05}
-      />
-    </mesh>
-  );
-});
+import { PondGround } from "./PondGround";
+import { useLoadEnv } from "../hooks/useLoadEnv";
+import { useSlowlyIncreaseCount } from "../hooks/useSlowlyIncreaseCount";
+import { FallingDuckInstances } from "./FallingDuckInstances";
 
 function Pond({ realDuck }: { realDuck: number }) {
   const [envMap, setEnvMap] = useState<string | null>(null);
-  const [duckModels, setDuckModels] = useState([FallingDuck]);
+  const [duckCount, setDuckCount] = useState(1);
 
-  const addDuck = useCallback((count: number, remainDucks: number) => {
-    if (count >= remainDucks) return;
-    const timer = setTimeout(() => {
-      setDuckModels((prevDucks) => [...prevDucks, FallingDuck]);
-      addDuck(count + 1, remainDucks);
-    }, 200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const remainDucks = realDuck - duckModels.length;
-    if (remainDucks <= 0) return;
-
-    const initialTimer = setTimeout(() => {
-      addDuck(0, remainDucks);
-    }, 1000);
-
-    return () => clearTimeout(initialTimer);
-  }, [realDuck, duckModels.length, addDuck]);
-
-  useEffect(() => {
-    (async () => {
-      const env = await import(
-        "@assets/models/industrial_sunset_puresky_4k.hdr"
-      );
-      setEnvMap(env.default);
-    })();
-  }, []);
+  useLoadEnv(setEnvMap);
+  useSlowlyIncreaseCount(realDuck, duckCount, setDuckCount);
 
   return (
     <Canvas shadows gl={{ antialias: false }} dpr={[1, 1.5]}>
@@ -102,10 +54,8 @@ function Pond({ realDuck }: { realDuck: number }) {
             restitution: 0.3,
           }}
         >
-          {duckModels.map((DuckComponent, index) => (
-            <DuckComponent key={index} />
-          ))}
-          <Ground />
+          <FallingDuckInstances duckCount={duckCount} />
+          <PondGround />
         </Physics>
       </Suspense>
       {envMap && <Environment files={envMap} />}
