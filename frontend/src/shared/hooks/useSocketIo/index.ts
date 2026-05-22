@@ -55,6 +55,11 @@ export function useSocketIO<E extends SocketEventMap>(
     DEFAULT_SOCKET_STATE,
   );
 
+  const optionsRef = React.useRef(options);
+  optionsRef.current = options;
+
+  const [connectionId, setConnectionId] = useState(0);
+
   const cleanupSocket = React.useCallback((socket: Socket) => {
     try {
       socket.offAny();
@@ -73,35 +78,36 @@ export function useSocketIO<E extends SocketEventMap>(
       }
 
       const socket = io(
-        SOCKET_URL + options.url,
+        SOCKET_URL + optionsRef.current.url,
         DEFAULT_SOCKET_OPTIONS(accessToken),
       );
 
       socket.on("connect", () => {
         dispatch({ type: "CONNECT_SUCCESS" });
-        options.onConnect?.();
+        optionsRef.current.onConnect?.();
       });
 
       socket.on("disconnect", (reason) => {
         dispatch({ type: "DISCONNECT" });
-        options.onDisconnect?.(reason);
+        optionsRef.current.onDisconnect?.(reason);
       });
 
       socket.on("reconnect_attempt", (attempt) => {
         dispatch({ type: "RECONNECT_ATTEMPT", attempt });
-        options.onReconnectAttempt?.(attempt);
+        optionsRef.current.onReconnectAttempt?.(attempt);
       });
 
       socket.on("connect_error", (error) => {
         dispatch({ type: "CONNECT_ERROR", error });
-        options.onError?.(error);
+        optionsRef.current.onError?.(error);
       });
 
       socket.connect();
       socketRef.current = socket;
+      setConnectionId((prev) => prev + 1);
       return socket;
     },
-    [cleanupSocket, options],
+    [cleanupSocket],
   );
 
   useEffect(() => {
@@ -159,12 +165,13 @@ export function useSocketIO<E extends SocketEventMap>(
         return false;
       },
       on: <K extends keyof E>(event: K, handler: (data: E[K]) => void) => {
-        socketRef.current?.on(
+        const targetSocket = socketRef.current;
+        targetSocket?.on(
           event as string,
           handler as (...args: unknown[]) => void,
         );
         return () => {
-          socketRef.current?.off(
+          targetSocket?.off(
             event as string,
             handler as (...args: unknown[]) => void,
           );
@@ -185,7 +192,7 @@ export function useSocketIO<E extends SocketEventMap>(
         socketRef.current?.disconnect();
       },
     }),
-    [socketState],
+    [socketState, connectionId],
   );
 
   return api;
