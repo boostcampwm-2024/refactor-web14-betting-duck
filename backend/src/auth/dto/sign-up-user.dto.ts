@@ -1,6 +1,6 @@
 import { createZodDto } from "nestjs-zod";
-import { requestSignUpSchema } from "@shared/schemas/users/request";
-import { responseSignUpSchema } from "@shared/schemas/users/response";
+import { requestSignUpSchema } from "@betting-duck/shared";
+import { responseSignUpSchema } from "@betting-duck/shared";
 
 export class SignUpUserRequestDto extends createZodDto(requestSignUpSchema) {}
 

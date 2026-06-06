@@ -38,7 +38,7 @@ export class UserController {
     res.cookie("access_token", result.accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, //임시 개발 환경을 위한 설정
-      secure: true,
+      secure: false,
       // sameSite: "strict",
     });
     return res.status(HttpStatus.OK).json({
@@ -64,7 +64,7 @@ export class UserController {
     res.cookie("access_token", result.accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, //임시 개발 환경을 위한 설정
-      secure: true,
+      secure: false,
       // sameSite: "strict",
     });
     return res.status(HttpStatus.OK).json({

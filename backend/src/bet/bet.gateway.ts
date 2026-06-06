@@ -12,11 +12,11 @@ import {
   joinRoomRequestType,
   leaveRoomRequestSchema,
   leaveRoomRequestType,
-} from "@shared/schemas/shared";
+} from "@betting-duck/shared";
 import {
   fetchBetRoomInfoRequestSchema,
   fetchBetRoomInfoRequestType,
-} from "@shared/schemas/bet/socket/request";
+} from "@betting-duck/shared";
 import { JwtUtils } from "src/utils/jwt.utils";
 import { UseFilters } from "@nestjs/common";
 import { GlobalWsExceptionFilter } from "src/utils/filters/global-ws-exception.filter";
@@ -25,7 +25,7 @@ import { GlobalWsExceptionFilter } from "src/utils/filters/global-ws-exception.f
 @WebSocketGateway({
   namespace: "api/betting",
   cors: {
-    origin: "*",
+    origin: true,
     credentials: true,
   },
   // serverOptions: {

@@ -9,13 +9,13 @@ import { Server, Socket } from "socket.io";
 import {
   sendMessageRequestSchema,
   sendMessageRequestType,
-} from "@shared/schemas/chat/socket/request";
+} from "@betting-duck/shared";
 import {
   joinRoomRequestSchema,
   joinRoomRequestType,
   leaveRoomRequestSchema,
   leaveRoomRequestType,
-} from "@shared/schemas/shared";
+} from "@betting-duck/shared";
 import { UseFilters, UseGuards } from "@nestjs/common";
 import { GlobalWsExceptionFilter } from "src/utils/filters/global-ws-exception.filter";
 import { AuthenticatedGuard } from "src/utils/guards/ws-authenticated.guard";
@@ -24,7 +24,7 @@ import { AuthenticatedGuard } from "src/utils/guards/ws-authenticated.guard";
 @WebSocketGateway({
   namespace: "api/chat",
   cors: {
-    origin: "*",
+    origin: true,
     credentials: true,
   },
 })

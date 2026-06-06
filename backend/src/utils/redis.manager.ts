@@ -53,7 +53,7 @@ export class RedisManager {
   }
 
   async deleteUser(userId: string) {
-    await this.client.del(userId);
+    await this.client.del(`user:${userId}`);
   }
 
   async nickNameExists(nickname: string): Promise<string | null> {

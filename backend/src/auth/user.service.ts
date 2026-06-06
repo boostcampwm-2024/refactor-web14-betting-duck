@@ -14,7 +14,7 @@ import {
   requestSignInSchema,
   requestGuestSignInSchema,
   requestUpgradeGuest,
-} from "@shared/schemas/users/request";
+} from "@betting-duck/shared";
 import { SignUpUserRequestDto } from "./dto/sign-up-user.dto";
 import { SignInUserRequestDto } from "./dto/sign-in-user.dto";
 import { UpgradeGuestRequestDto } from "./dto/upgrade-guest.dto";
@@ -123,11 +123,11 @@ export class UserService {
   }
 
   async signOut(req: Request, res: Response) {
-    // const userInfo = req["user"];
+    const userInfo = req["user"];
 
-    // if (userInfo.role === "guest") {
-    //   await this.redisManager.deleteUser(String(userInfo.id));
-    // }
+    if (userInfo && userInfo.role === "guest") {
+      await this.redisManager.deleteUser(String(userInfo.id));
+    }
 
     res.clearCookie("access_token");
   }
@@ -142,14 +142,20 @@ export class UserService {
 
     const userInfo = await this.userRepository.findOneById(userId);
     if (userInfo) {
+      const role = req["user"].role;
       await this.redisManager.setUser({
         userId: String(userInfo.id),
         nickname: userInfo.nickname,
-        role: req["user"].role,
+        role: role,
         duck: userInfo.duck,
         realDuck: userInfo.realDuck,
       });
-      return userInfo;
+      return {
+        nickname: userInfo.nickname,
+        role: role,
+        duck: userInfo.duck,
+        realDuck: userInfo.realDuck,
+      };
     }
 
     throw new NotFoundException("해당 유저를 찾을 수 없습니다.");

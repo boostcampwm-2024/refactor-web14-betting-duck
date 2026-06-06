@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-// import { Observable } from 'rxjs';
 import { Socket } from "socket.io";
+import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {
@@ -10,33 +10,31 @@ export class AuthenticatedGuard implements CanActivate {
       "AuthenticatedGuard(테스트용 로그, client IP) : ",
       client.handshake.headers["x-real-ip"],
     );
-    /*
-    client.handshake 구조
 
-    {
-        headers: {
-            upgrade: 'websocket',
-            connection: 'Upgrade',
-            host: 'localhost',
-            'x-real-ip': '192.168.176.1',
-            'x-forwarded-for': '192.168.176.1',
-            'x-forwarded-proto': 'http',
-            'sec-websocket-version': '13',
-            'sec-websocket-key': 'aTecGCs4/MMBaKgMje1nsg==',
-            'sec-websocket-extensions': 'permessage-deflate; client_max_window_bits'
-        },
-        time: 'Fri Nov 15 2024 06:26:25 GMT+0000 (Coordinated Universal Time)',
-        address: '192.168.176.5',
-        xdomain: false,
-        secure: false,
-        issued: 1731651985286,
-        url: '/socket.io/?EIO=4&transport=websocket',
-        query: [Object: null prototype] { EIO: '4', transport: 'websocket' },
+    const accessToken =
+      client.handshake.auth?.token || client.handshake.headers?.token;
+
+    if (!accessToken) {
+      return false;
     }
-    */
 
-    // TODO: 토큰 검증 로직
+    try {
+      const payload = jwt.verify(
+        accessToken,
+        process.env.JWT_SECRET || "secret",
+      ) as { id: string | number; role: string };
 
-    return true;
+      if (!payload || (payload.role !== "user" && payload.role !== "guest")) {
+        return false;
+      }
+
+      client.data.userId =
+        typeof payload.id === "number" ? String(payload.id) : payload.id;
+      client.data.userRole = payload.role;
+      return true;
+    } catch (err) {
+      console.error("WS Token verification error:", err);
+      return false;
+    }
   }
 }
