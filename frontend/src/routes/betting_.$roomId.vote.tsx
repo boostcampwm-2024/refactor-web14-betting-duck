@@ -72,17 +72,17 @@ function RouteComponent() {
           "border-secondary flex min-w-0.5 border-l-8",
         )}
       >
-        <BettingProvider>
-          <Suspense
-            fallback={
-              <div className="flex h-full w-full items-center justify-center">
-                <LoadingAnimation />
-              </div>
-            }
-          >
+        <Suspense
+          fallback={
+            <div className="flex h-full w-full items-center justify-center">
+              <LoadingAnimation />
+            </div>
+          }
+        >
+          <BettingProvider>
             <Outlet />
-          </Suspense>
-        </BettingProvider>
+          </BettingProvider>
+        </Suspense>
       </div>
     </div>
   );

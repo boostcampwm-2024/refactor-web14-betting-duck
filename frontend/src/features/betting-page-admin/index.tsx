@@ -48,6 +48,7 @@ function BettingPageAdmin() {
 
   const socket = useSocketIO({
     url: "/api/betting",
+    roomId: channel.id,
     onConnect: () => {
       console.log("관리자 페이지에 소켓이 연결 되었습니다.");
       handleSocketConnection();
@@ -89,9 +90,13 @@ function BettingPageAdmin() {
     // 방이 활성화 상태이고 정보를 아직 가져오지 않은 경우
     if (channel.status === "active" && !fetchBetRoomInfoRef.current) {
       fetchBetRoomInfoRef.current = true;
-      socket.emit("fetchBetRoomInfo", {
-        roomId: channel.id,
-      });
+      socket.emit(
+        "fetchBetRoomInfo",
+        {
+          roomId: channel.id,
+        },
+        { volatile: true },
+      );
     }
   }, [channel.id, channel.status, socket]);
 
@@ -268,7 +273,7 @@ function BettingPageAdmin() {
   return (
     <div className="bg-layout-main flex h-full w-full flex-col justify-between">
       <div className="flex flex-col gap-5">
-        <BettingTimer socket={socket} bettingRoomInfo={bettingRoomInfo} />
+        <BettingTimer bettingRoomInfo={bettingRoomInfo} />
         <div className="flex flex-col gap-6 p-5">
           <BettingDetails
             title={title}

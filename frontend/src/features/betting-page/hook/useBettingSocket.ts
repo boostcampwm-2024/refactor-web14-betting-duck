@@ -30,9 +30,13 @@ function onSocketConnect({
   }
   if (channel.status === "active" && !fetchRef.current) {
     fetchRef.current = true;
-    socket.emit("fetchBetRoomInfo", {
-      roomId: channel.id,
-    });
+    socket.emit(
+      "fetchBetRoomInfo",
+      {
+        roomId: channel.id,
+      },
+      { volatile: true },
+    );
   }
 }
 
@@ -62,6 +66,7 @@ export function useBettingSocket(channel: ChannelType) {
 
   const socket = useSocketIO({
     url: "/api/betting",
+    roomId: channel.id,
     onConnect: () => onSocketConnect({ socket, channel, joinRef, fetchRef }),
     onDisconnect: (reason) => {
       console.log("베팅 페이지에 소켓 연결이 끊겼습니다.", reason);

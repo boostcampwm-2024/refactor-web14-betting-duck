@@ -14,6 +14,7 @@ function ChatProvider({ children }: { children: React.ReactNode }) {
   const { data: userInfo = DEFAULT_USERINFO } = useUserInfo();
   const socket = useSocketIO({
     url: "/api/chat",
+    roomId,
     onConnect: () => {
       console.log("채팅 메세지 소켓에 연결이 되었습니다.");
       joinChatRoom();

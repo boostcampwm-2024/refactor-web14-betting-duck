@@ -1,19 +1,18 @@
 import { cn } from "@/shared/misc";
-import { useSocketIO } from "@/shared/hooks/useSocketIo";
 import { TotalBettingDisplay } from "./TotalBettingDisplay";
 import { BettingHeader } from "./BettingHeader";
 import { BettingInput } from "./BettingInput";
 import { BettingFooter } from "./BettingFooter";
 import { BettingRoomInfo } from "@betting-duck/shared";
+import { useBettingSocketContext } from "../provider/useBettingSocketContext";
 
 function BettingContainer({
-  socket,
   bettingRoomInfo,
 }: {
-  socket: ReturnType<typeof useSocketIO>;
   bettingRoomInfo: BettingRoomInfo;
 }) {
   const { channel } = bettingRoomInfo;
+  const socket = useBettingSocketContext();
 
   return (
     <div

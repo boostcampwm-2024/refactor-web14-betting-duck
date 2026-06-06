@@ -2,6 +2,10 @@ import React from "react";
 import { type BettingPool } from "@/shared/utils/bettingOdds";
 import { useSessionStorage } from "@/shared/hooks/useSessionStorage";
 import { STORAGE_KEY } from "../model/var";
+import { useParams } from "@tanstack/react-router";
+import { useBettingRoomInfo } from "@/shared/hooks/useBettingRoomInfo";
+import { useBettingSocket } from "../hook/useBettingSocket";
+import { useSocketIO } from "@/shared/hooks/useSocketIo";
 
 // 기본 베팅 풀 상태
 const DEFAULT_BETTING_POOL: ContextBettingPool = {
@@ -20,6 +24,7 @@ const DEFAULT_BETTING_POOL: ContextBettingPool = {
 };
 
 interface BettingContextType {
+  socket: ReturnType<typeof useSocketIO> | null;
   updateBettingPool: (partialPool: PartialBettingPool) => Promise<void>;
 }
 
@@ -38,14 +43,23 @@ interface ContextBettingPool extends BettingPool {
   isBettingEnd: boolean;
   selectedOption: keyof BettingPool;
 }
+
 const BettingContext = React.createContext<BettingContextType>({
+  socket: null,
   updateBettingPool: async () => {},
 });
 
 function BettingProvider({ children }: { children: React.ReactNode }) {
   const { setSessionItem } = useSessionStorage();
 
-  // 베팅 풀 업데이트 함수
+  const { roomId } = useParams({
+    from: "/betting_/$roomId/vote",
+  });
+
+  const { data: bettingRoomInfo } = useBettingRoomInfo(roomId);
+
+  const socket = useBettingSocket(bettingRoomInfo.channel);
+
   const updateBettingPool = React.useCallback(
     async (partialPool: PartialBettingPool) => {
       try {
@@ -77,12 +91,12 @@ function BettingProvider({ children }: { children: React.ReactNode }) {
     [setSessionItem],
   );
 
-  // Context 값 메모이제이션
   const value = React.useMemo(
     () => ({
+      socket,
       updateBettingPool,
     }),
-    [updateBettingPool],
+    [socket, updateBettingPool],
   );
 
   return (

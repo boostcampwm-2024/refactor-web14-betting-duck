@@ -1,5 +1,6 @@
 import { useSocketIO } from "@/shared/hooks/useSocketIo";
 import React from "react";
+import { useParams } from "@tanstack/react-router";
 
 interface WaitingRoomContextType {
   socket: ReturnType<typeof useSocketIO>;
@@ -11,9 +12,13 @@ const WaitingRoomContext = React.createContext<WaitingRoomContextType>(null!);
 
 function WaitingRoomProvider({ children }: { children: React.ReactNode }) {
   const [isBettingStarted, setIsBettingStarted] = React.useState(false);
+  const { roomId } = useParams({
+    from: "/betting_/$roomId/waiting",
+  });
 
   const socket = useSocketIO({
     url: "/api/betting",
+    roomId,
     onConnect: () => {
       console.log("투표 대기 방에서 소켓 연결을 성공 했습니다.");
     },
