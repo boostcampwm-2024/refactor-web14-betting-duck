@@ -2,9 +2,10 @@ import { Socket } from "socket.io-client";
 
 export interface SocketOptions {
   url: string;
+  roomId?: string;
   accessToken?: string;
   onConnect?: () => void;
-  onDisconnect?: (reason: Socket.DisconnectReason) => void;
+  onDisconnect?: (reason: unknown) => void;
   onError?: (error: Error) => void;
   onReconnectAttempt?: (attempt: number) => void;
   onReconnectFailed?: () => void;
@@ -28,7 +29,11 @@ export type SocketEventMap = Record<string, unknown>;
 
 export interface UseSocketReturn<E extends SocketEventMap> extends SocketState {
   socket: Socket | null;
-  emit: <K extends keyof E>(event: K, data: E[K]) => boolean;
+  emit: <K extends keyof E>(
+    event: K,
+    data: E[K],
+    options?: { volatile?: boolean },
+  ) => boolean;
   on: <K extends keyof E>(
     event: K,
     handler: (data: E[K]) => void,
