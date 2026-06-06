@@ -1,16 +1,15 @@
 import { TimerIcon } from "@/shared/icons";
 import { ProgressBar } from "@/shared/components/ProgressBar";
-import { useSocketIO } from "@/shared/hooks/useSocketIo";
 import { BettingRoomInfo } from "@betting-duck/shared";
 import { useVotingTimer } from "./hooks/useBettingTimer";
+import { useBettingSocketContext } from "@/features/betting-page/provider/useBettingSocketContext";
 
 function BettingTimer({
-  socket,
   bettingRoomInfo,
 }: {
-  socket: ReturnType<typeof useSocketIO>;
   bettingRoomInfo: BettingRoomInfo;
 }) {
+  const socket = useBettingSocketContext();
   const { remaining, progress, active, format } = useVotingTimer(
     bettingRoomInfo.channel.metadata,
     socket,
