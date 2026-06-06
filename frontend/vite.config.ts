@@ -37,18 +37,18 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     server: {
-      port: 3000,
       proxy: {
         "/api": {
           target: env.SOCKET_URL,
           changeOrigin: true,
           secure: false,
           ws: true,
-          configure: (proxy) => {
-            proxy.on("proxyRes", (proxyRes) => {
-              proxyRes.headers["cache-control"] = "public, max-age=31536000";
-            });
-          },
+        },
+        "/socket.io": {
+          target: env.SOCKET_URL,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
         },
       },
       middlewareMode: env.NODE_ENV === "development" ? false : true,
@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      __SOCKET_URL__: JSON.stringify(env.SOCKET_URL),
+      __SOCKET_URL__: JSON.stringify(env.VITE_APP_ENV === "development" ? "" : env.SOCKET_URL),
       __APP_ENV__: JSON.stringify(env.VITE_APP_ENV),
     },
     build: {
