@@ -57,7 +57,16 @@ export function useSessionStoredUser(): [
 
   const updateUserInfo = useCallback(
     async (patch: Partial<UserInfoWithRoomId>) => {
-      const next = { ...userInfo, ...patch };
+      let current = userInfo;
+      try {
+        const raw = await getSessionItem("userInfo");
+        if (raw) {
+          current = JSON.parse(raw);
+        }
+      } catch (e) {
+        console.error("세션 정보 로드 실패", e);
+      }
+      const next = { ...current, ...patch };
       try {
         await setSessionItem("userInfo", JSON.stringify(next));
         setUserInfo(next);
@@ -65,7 +74,7 @@ export function useSessionStoredUser(): [
         console.error("세션에 사용자 정보 저장 실패");
       }
     },
-    [setSessionItem, userInfo],
+    [getSessionItem, setSessionItem, userInfo],
   );
 
   return [userInfo, updateUserInfo];

@@ -27,26 +27,41 @@ function GuestLoginForm({ to, roomId }: { to?: string; roomId?: string }) {
     if (!inputRef.current) return;
     e.preventDefault();
     const nickname = inputRef.current?.value;
-    const response = await handleGuestSignin(`익명의 ${nickname}`);
-    if (!response.ok) {
+    const response = await handleGuestSignin(nickname);
+    if (!response) {
       console.error("게스트 로그인에 실패했습니다.");
       return;
     }
-    updateQueryClient(queryClient, authQueries.queryKey, (prev) => ({
-      ...prev,
-      userInfo: {
-        role: "guest",
-        nickname: nickname,
-        duck: 0,
-        message: "OK",
-        realDuck: prev.userInfo.realDuck,
-      },
-    }));
+    updateQueryClient(queryClient, authQueries.queryKey, (prev) => {
+      if (!prev) {
+        return {
+          isAuthenticated: true,
+          userInfo: {
+            role: "guest",
+            nickname: response.nickname,
+            duck: 300,
+            message: "OK",
+            realDuck: 0,
+          },
+        };
+      }
+      return {
+        ...prev,
+        isAuthenticated: true,
+        userInfo: {
+          role: "guest",
+          nickname: response.nickname,
+          duck: prev.userInfo?.duck ?? 300,
+          message: "OK",
+          realDuck: prev.userInfo?.realDuck ?? 0,
+        },
+      };
+    });
 
     setAuthState((prev) => ({
       ...prev,
       isAuthenticated: true,
-      nickname: nickname,
+      nickname: response.nickname,
     }));
 
     if (to && roomId) {

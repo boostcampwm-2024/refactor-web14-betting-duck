@@ -1,7 +1,4 @@
-import {
-  authenticatedUserInfoSchema,
-  userInfoSchema,
-} from "@betting-duck/shared";
+import { userInfoSchema } from "@betting-duck/shared";
 
 import type { AuthenticateUserInfo, UserInfo } from "@betting-duck/shared";
 
@@ -73,7 +70,7 @@ export async function getUserInfo() {
   }
 
   const { data } = await userInfoResponse.json();
-  const result = authenticatedUserInfoSchema.safeParse(data);
+  const result = userInfoSchema.safeParse(data);
 
   if (!result.success) {
     return defaultUserInfo;

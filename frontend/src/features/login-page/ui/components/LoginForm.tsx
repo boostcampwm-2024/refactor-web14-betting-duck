@@ -26,16 +26,31 @@ function LoginForm() {
 
       queryClient.setQueryData(
         authQueries.queryKey,
-        (prev: AuthenticateUserInfo) => ({
-          ...prev,
-          userInfo: {
-            role: "guest",
-            nickname: data.nickname,
-            duck: 0,
-            message: "OK",
-            realDuck: prev.userInfo.realDuck,
-          },
-        }),
+        (prev: AuthenticateUserInfo | undefined) => {
+          if (!prev) {
+            return {
+              isAuthenticated: true,
+              userInfo: {
+                role: data.role || "user",
+                nickname: data.nickname,
+                duck: 0,
+                message: "OK",
+                realDuck: 0,
+              },
+            };
+          }
+          return {
+            ...prev,
+            isAuthenticated: true,
+            userInfo: {
+              role: data.role || "user",
+              nickname: data.nickname,
+              duck: prev.userInfo?.duck ?? 0,
+              message: "OK",
+              realDuck: prev.userInfo?.realDuck ?? 0,
+            },
+          };
+        },
       );
       await queryClient.invalidateQueries({ queryKey: authQueries.queryKey });
       setAuthState((prev) => ({
